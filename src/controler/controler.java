@@ -60,7 +60,9 @@ public class controler {
     public List<GioHang> removeProduct(int value, int index) {
         if (value < 0 || value > listGioHang.get(index).getSoLuong()) {
             JOptionPane.showMessageDialog(null, "So luong mua can khong hop le");
-        } else {
+        } else if(value == 0){
+            listGioHang.remove(index);
+        }else {
             GioHang gh = listGioHang.get(index);
             for (SanPham sp : listSp) {
                 if(sp.getIdSP().equals(gh.getMaSp())){
