@@ -297,6 +297,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblCartMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -448,9 +451,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtMoneyPay">
-          <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMoneyPayFocusLost"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtChange">
         </Component>
@@ -463,9 +463,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Thanh To&#xe1;n"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPayActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDateCreate">
           <Properties>

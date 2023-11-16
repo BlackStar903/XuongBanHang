@@ -5,9 +5,10 @@
 package view;
 
 import controler.controler;
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.GioHang;
 import model.SanPham;
 
 /**
@@ -21,19 +22,33 @@ public class BanHangView extends javax.swing.JFrame {
      */
     public BanHangView() {
         initComponents();
+        setLocationRelativeTo(null);
     }
     private final controler ctl = new controler();
     private final List<SanPham> listSp = ctl.fakeData();
+    List<GioHang> listGioHang = ctl.listGioHang;
     DefaultTableModel dtm;
-    int i = 0;
+    int index = -1;
 
     private void getData() {
+        int i = 0;
         dtm = (DefaultTableModel) tblProducts.getModel();
         dtm.setRowCount(0);
 
         for (SanPham sp : listSp) {
             i++;
             dtm.addRow(new Object[]{i, sp.getIdSP(), sp.getTenSp(), sp.getNamBan(), sp.getTrongLuong(), sp.getMoTa(), sp.getSoLuong(), sp.getGiaNhap(), sp.getGiaBan()});
+        }
+    }
+
+    private void fillDataCart() {
+        int i = 0;
+        dtm = (DefaultTableModel) tblCart.getModel();
+        dtm.setRowCount(0);
+
+        for (GioHang gh : listGioHang) {
+            i++;
+            dtm.addRow(new Object[]{i, gh.getMaSp(), gh.getTenSp(), gh.getSoLuong(), gh.getDonGia(), gh.getThanhTien()});
         }
     }
 
@@ -153,6 +168,11 @@ public class BanHangView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblCart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCartMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblCart);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -193,20 +213,9 @@ public class BanHangView extends javax.swing.JFrame {
 
         jLabel6.setText("Tiền Khách Đưa");
 
-        txtMoneyPay.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtMoneyPayFocusLost(evt);
-            }
-        });
-
         jLabel7.setText("Tiền Thừa");
 
         btnPay.setText("Thanh Toán");
-        btnPay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPayActionPerformed(evt);
-            }
-        });
 
         txtDateCreate.setEnabled(false);
 
@@ -408,78 +417,32 @@ public class BanHangView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtMoneyPayFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMoneyPayFocusLost
-//
-//                if (txtMoneyPay.getText().isBlank()) {
-//                        JOptionPane.showMessageDialog(this, "So tien khach tra khong duoc de trong");
-//                    }
-//        try {
-//            Double.valueOf(txtMoneyPay.getText());
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Tien nhap vao khong dung dinh dang");
-//            return;
-//        }
-//        if (Double.parseDouble(txtMoneyPay.getText()) < Double.parseDouble(txtTotal.getText())) {
-//            JOptionPane.showMessageDialog(this, "So tien khach tra khong duoc nho hon tong tien");
-//        } else {
-//            HoaDon hd = listHoaDon.get(tblhoadon.getSelectedRow());
-//            txtChange.setText(String.valueOf(Double.parseDouble(txtMoneyPay.getText()) - hd.getTongTien()));
-//        }
-    }//GEN-LAST:event_txtMoneyPayFocusLost
-
-    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
-//
-//        try {
-//            if (tblhoadon.getSelectedRow() < 0) {
-//                JOptionPane.showMessageDialog(this, "Ban chua chon hoa don de thanh toan");
-//                return;
-//            }
-//            Double.valueOf(txtMoneyPay.getText());
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Tien nhap vao khong dung dinh dang");
-//            return;
-//        }
-//        if (Double.parseDouble(txtMoneyPay.getText()) < Double.parseDouble(txtTotal.getText())) {
-//            JOptionPane.showMessageDialog(this, "So tien khach tra khong duoc nho hon tong tien");
-//            return;
-//        } else {
-//            //            HoaDon hd = listHoaDon.get(tblhoadon.getSelectedRow());
-//            //            hd.setTinhTrang("Đã Thanh Toán");
-//            HoaDon vitri = choThanhToan.get(tblhoadon.getSelectedRow());
-//            vitri.setTinhTrang("Đã Thanh Toán");
-//            for (HoaDon listHd : listHoaDon) {
-//                if(listHd.getMaHD().equals(vitri.getMaHD())){
-//                    listHd.setTinhTrang("Đã thanh toán");
-//                }
-//            }
-//            daThanhtoan.add(new HoaDon(vitri.getIndex(), vitri.getMaHD(), vitri.getNgayTao(), vitri.getTenNV(), "Đã Thanh toán", 0));
-//            choThanhToan.remove(tblhoadon.getSelectedRow());
-//            txtBillId.setText("");
-//            txtChange.setText("");
-//            txtDateCreate.setText("");
-//            txtTotal.setText("");
-//            txtMoneyPay.setText("");
-//            txtStaffName.setText("");
-//        }
-//
-//        if (rdoAll.isSelected()) {
-//            fillTableHoadon(listHoaDon);
-//        } else {
-//            fillTableHoadon(choThanhToan);
-//        }
-    }//GEN-LAST:event_btnPayActionPerformed
-
     private void tblProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductsMouseClicked
-//        tblModelSanPham = (DefaultTableModel) tblCart.getModel();
-//        SanPhamModel spm = listSanPham.get(tblProducts.getSelectedRow());
-//        bhc.addCart(spm);
-//        LoadDataSanPham(listSanPham);
-//        LoadDataCart(bhc.spGioHang);
+        try {
+            index = tblProducts.getSelectedRow();
+            int value = Integer.parseInt(JOptionPane.showInputDialog("Nhap so luong mua"));
+            ctl.getProduct(value, index);
+            fillDataCart();
+            getData();           
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_tblProductsMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         getData();
+        fillDataCart();
     }//GEN-LAST:event_formWindowOpened
+
+    private void tblCartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCartMouseClicked
+         try {
+            index = tblCart.getSelectedRow();
+            int value = Integer.parseInt(JOptionPane.showInputDialog("Nhap so luong mua can thiet"));
+            ctl.removeProduct(value, index);
+            fillDataCart();
+            getData();
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_tblCartMouseClicked
 
     /**
      * @param args the command line arguments
