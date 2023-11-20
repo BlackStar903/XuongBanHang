@@ -25,8 +25,8 @@ public class BanHangView extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
     private final controler ctl = new controler();
-    private final List<SanPham> listSp = ctl.fakeData();
-    List<GioHang> listGioHang = ctl.listGioHang;
+    private final List<SanPham> listSp = ctl.getDataFromDb();
+    private final List<GioHang> listGioHang = ctl.listGioHang;
     DefaultTableModel dtm;
     int index = -1;
 
@@ -123,6 +123,11 @@ public class BanHangView extends javax.swing.JFrame {
         rdoCancelled.setText("Đã hủy");
 
         btnCreateBill.setText("Tạo hóa đơn");
+        btnCreateBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateBillActionPerformed(evt);
+            }
+        });
 
         btnCancelledBill.setText("Hủy hóa đơn");
 
@@ -443,6 +448,10 @@ public class BanHangView extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_tblCartMouseClicked
+
+    private void btnCreateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateBillActionPerformed
+        
+    }//GEN-LAST:event_btnCreateBillActionPerformed
 
     /**
      * @param args the command line arguments
