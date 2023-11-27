@@ -9,6 +9,7 @@ package model;
  * @author Admin
  */
 public class GioHang{
+    private int id;
     private String maSp,tenSp;
     private double donGia,thanhTien;
     private int soLuong;
@@ -16,12 +17,21 @@ public class GioHang{
     public GioHang() {
     }
 
-    public GioHang(String maSp, String tenSp, double donGia, double thanhTien, int soLuong) {
+    public GioHang(int id, String maSp, String tenSp, double donGia, double thanhTien, int soLuong) {
+        this.id = id;
         this.maSp = maSp;
         this.tenSp = tenSp;
         this.donGia = donGia;
         this.thanhTien = thanhTien;
         this.soLuong = soLuong;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMaSp() {

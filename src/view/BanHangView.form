@@ -28,6 +28,8 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -37,6 +39,7 @@
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
+    <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="formMouseMoved"/>
     <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
   </Events>
   <AuxValues>
@@ -64,7 +67,7 @@
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="rdoCancelled" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnPaid" min="-2" pref="98" max="-2" attributes="0"/>
+                      <Component id="rdoPaid" min="-2" pref="98" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -73,16 +76,12 @@
                           <Component id="jPanel1" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="btnCreateBill" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="btnCancelledBill" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  </Group>
+                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="btnCancelledBill" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnCreateBill" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jScrollPane2" min="-2" pref="434" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -115,7 +114,7 @@
                   <Component id="rdoWait" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="rdoAll" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="rdoCancelled" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnPaid" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="rdoPaid" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -153,23 +152,45 @@
   <SubComponents>
     <Component class="javax.swing.JRadioButton" name="rdoWait">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup1"/>
+        </Property>
+        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="Ch&#x1edd; thanh to&#xe1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rdoWaitMouseClicked"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="btnPaid">
+    <Component class="javax.swing.JRadioButton" name="rdoPaid">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="&#x110;&#xe3; thanh to&#xe1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rdoPaidMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="rdoAll">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="T&#x1ea5;t c&#x1ea3;"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JRadioButton" name="rdoCancelled">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="&#x110;&#xe3; h&#x1ee7;y"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="rdoCancelledMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCreateBill">
       <Properties>
@@ -183,6 +204,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="H&#x1ee7;y h&#xf3;a &#x111;&#x1a1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelledBillActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
       <AuxValues>
@@ -191,7 +215,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable2">
+        <Component class="javax.swing.JTable" name="tblBill">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="5" rowCount="4">
@@ -235,6 +259,9 @@
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblBillMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -454,8 +481,17 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtMoneyPay">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMoneyPayKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtChange">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
@@ -466,6 +502,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Thanh To&#xe1;n"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPayActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDateCreate">
           <Properties>

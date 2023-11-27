@@ -9,6 +9,7 @@ package model;
  * @author Admin
  */
 public class SanPham {
+    private int id;
     private String idSP,tenSp,namBan,trongLuong,moTa;
     private int soLuong;
     private double giaNhap,giaBan;
@@ -16,7 +17,8 @@ public class SanPham {
     public SanPham() {
     }
 
-    public SanPham(String idSP, String tenSp, String namBan, String trongLuong, String moTa, int soLuong, double giaNhap, double giaBan) {
+    public SanPham(int id, String idSP, String tenSp, String namBan, String trongLuong, String moTa, int soLuong, double giaNhap, double giaBan) {
+        this.id = id;
         this.idSP = idSP;
         this.tenSp = tenSp;
         this.namBan = namBan;
@@ -25,6 +27,14 @@ public class SanPham {
         this.soLuong = soLuong;
         this.giaNhap = giaNhap;
         this.giaBan = giaBan;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getIdSP() {

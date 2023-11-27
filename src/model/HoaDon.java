@@ -10,7 +10,7 @@ package model;
  */
 public class HoaDon {
 
-    private int index;
+    private int id;
     private String maHD, ngayTao, tenNV, tinhTrang;
     private double tongTien;
 
@@ -18,21 +18,13 @@ public class HoaDon {
 
     }
 
-    public HoaDon(int index, String maHD, String ngayTao, String tenNV, String tinhTrang, double tongTien) {
-        this.index = index;
+    public HoaDon(int id, String maHD, String ngayTao, String tenNV, String tinhTrang, double tongTien) {
+        this.id = id;
         this.maHD = maHD;
         this.ngayTao = ngayTao;
         this.tenNV = tenNV;
         this.tinhTrang = tinhTrang;
         this.tongTien = tongTien;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 
     public String getMaHD() {
@@ -75,4 +67,12 @@ public class HoaDon {
         this.tongTien = tongTien;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
 }
