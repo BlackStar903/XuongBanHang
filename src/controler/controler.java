@@ -4,18 +4,22 @@
  */
 package controler;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import model.GioHang;
 import model.SanPham;
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.HoaDon;
 import java.util.Date;
+import model.Voucher;
 
 /**
  *
@@ -28,7 +32,10 @@ public class controler {
     public List<HoaDon> listHoaDonChuaThanhToan = new ArrayList<>();
     public List<HoaDon> listHDDaThanhToan = new ArrayList<>();
     public List<HoaDon> listHDHuy = new ArrayList<>();
-
+    public List<HoaDon> listAll = new ArrayList<>();
+    public List<HoaDon> listSearch = new ArrayList<>();
+    public List<Voucher> listVoucher = new ArrayList<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public Double total = 0d;
 
     private Connection openConnection() throws SQLException {
@@ -36,7 +43,8 @@ public class controler {
         return DriverManager.getConnection(url);
     }
 
-    public List<SanPham> getDataFromDb() {
+    public List<SanPham> getDataProducts() {
+        listSp.clear();
         try {
             Statement sta = openConnection().createStatement();
             String query = "Select * from SanPham";
@@ -81,17 +89,18 @@ public class controler {
         return listGioHang;
     }
 
-    public List<GioHang> removeProduct(int value, int index) {
-        if (value < 0 || value > listGioHang.get(index).getSoLuong()) {
+    public List<GioHang> updateProduct(int value, int index) {
+        if (value <= 0) {
             JOptionPane.showMessageDialog(null, "So luong mua can khong hop le");
         } else {
             GioHang gh = listGioHang.get(index);
             for (SanPham sp : listSp) {
                 if (sp.getIdSP().equals(gh.getMaSp())) {
-                    if (value == 0) {
-                        sp.setSoLuong(sp.getSoLuong() + listGioHang.get(index).getSoLuong());
-                        total -= sp.getGiaBan() * listGioHang.get(index).getSoLuong();
-                        listGioHang.remove(index);
+                    if (value > listGioHang.get(index).getSoLuong()) {
+                        sp.setSoLuong(sp.getSoLuong() - (value - gh.getSoLuong()));
+                        total = sp.getGiaBan() * value;
+                        gh.setSoLuong(value);
+                        gh.setThanhTien(gh.getSoLuong() * gh.getDonGia());
                     } else {
                         sp.setSoLuong(sp.getSoLuong() + gh.getSoLuong() - value);
                         total -= sp.getGiaBan() * (gh.getSoLuong() - value);
@@ -99,6 +108,18 @@ public class controler {
                         gh.setThanhTien(gh.getSoLuong() * gh.getDonGia());
                     }
                 }
+            }
+        }
+        return listGioHang;
+    }
+
+    public List<GioHang> removeProduct(int index) {
+        GioHang gh = listGioHang.get(index);
+        for (SanPham sp : listSp) {
+            if (sp.getIdSP().equals(gh.getMaSp())) {
+                sp.setSoLuong(sp.getSoLuong() + listGioHang.get(index).getSoLuong());
+                total -= sp.getGiaBan() * listGioHang.get(index).getSoLuong();
+                listGioHang.remove(index);
             }
         }
         return listGioHang;
@@ -117,7 +138,7 @@ public class controler {
             ranHd += String.valueOf(r.nextInt(10));
         }
         Date now = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         int i = 0;
         try {
             i++;
@@ -131,21 +152,28 @@ public class controler {
                 ps.executeUpdate();
             }
             openConnection().close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
         getDataBill();
     }
 
     public List<HoaDon> getDataBill() {
         listHoaDonChuaThanhToan.clear();
+        listHDHuy.clear();
+        listHDDaThanhToan.clear();
+        listAll.clear();
         try {
             Statement sta = openConnection().createStatement();
-            ResultSet rs = sta.executeQuery("select * from HoaDon ");//where trang_thai like '%Chua%'
+            ResultSet rs = sta.executeQuery("select * from HoaDon ");
             while (rs.next()) {
-                if (rs.getString("trang_thai").equals("Da Thanh Toan")) {
+                if (rs.getString("trang_thai").equalsIgnoreCase("Da Thanh Toan")) {
                     listHDDaThanhToan.add(new HoaDon(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(7), rs.getDouble(6)));
-                } else {
+                    listAll.add(new HoaDon(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(7), rs.getDouble(6)));
+                } else if (rs.getString("trang_thai").equalsIgnoreCase("Chua Thanh Toan")) {
                     listHoaDonChuaThanhToan.add(new HoaDon(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(7), 0));
+                } else {
+                    listAll.add(new HoaDon(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(7), rs.getDouble(6)));
+                    listHDHuy.add(new HoaDon(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(7), 0));
                 }
             }
         } catch (SQLException ex) {
@@ -165,16 +193,20 @@ public class controler {
                 listGioHang.add(new GioHang(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(5), rs.getDouble(5) * rs.getInt(4), rs.getInt(4)));
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return listGioHang;
     }
 
-    public List<HoaDon> btnPay(HoaDon hd) {
+    public List<HoaDon> btnPay(HoaDon hd, int keyVoucher, int idVoucher) {
         try (Connection conn = openConnection()) {
-            PreparedStatement ps = conn.prepareStatement("exec SP_BtnPay ?,?");
+            PreparedStatement ps = conn.prepareStatement("exec SP_BtnPay ?,?,?");
             ps.setString(1, hd.getMaHD());
             ps.setDouble(2, hd.getTongTien());
+            if (keyVoucher == 1) {
+                ps.setInt(3, idVoucher);
+            } else {
+                ps.setString(3, null);
+            }
             ps.executeUpdate();
 
             for (GioHang gh : listGioHang) {
@@ -186,9 +218,8 @@ public class controler {
                 ps.executeUpdate();
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
-
+        getDataProducts();
         hd.setTinhTrang("Da Thanh Toan");
         listHDDaThanhToan.add(hd);
         listHoaDonChuaThanhToan.remove(hd);
@@ -198,11 +229,108 @@ public class controler {
     }
 
     public List<HoaDon> cancelBill(HoaDon hd) {
-        hd.setTinhTrang("Huy");
-        listHDHuy.add(hd);
-        listHoaDonChuaThanhToan.remove(hd);
+        try (Connection conn = openConnection()) {
+            PreparedStatement ps = null;
+            for (GioHang gioHang : listGioHang) {
+                ps = conn.prepareStatement("update SanPham set so_luong_ton = (so_luong_ton + ?) where ma_san_pham = ?");
+                ps.setInt(1, gioHang.getSoLuong());
+                ps.setString(2, gioHang.getMaSp());
+                ps.executeUpdate();
+            }
+            ps = conn.prepareStatement("update HoaDon set trang_thai = 'Huy' where id = ?");
+            ps.setInt(1, hd.getId());
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+        }
+        getDataProducts();
+        getDataBill();
         listGioHang.clear();
         return listHDHuy;
     }
 
+    public void saveData() {
+        try (Connection conn = openConnection()) {
+            for (SanPham sp : listSp) {
+                PreparedStatement ps = conn.prepareStatement("update SanPham set so_luong_ton = ? where ma_san_pham = ?");
+                ps.setInt(1, sp.getSoLuong());
+                ps.setString(2, sp.getIdSP());
+                ps.executeUpdate();
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
+    public List<HoaDon> search(Date f, Date l, String search, int key) throws ParseException {
+        listSearch.clear();
+
+        for (HoaDon hd : listAll) {
+            // tìm theo ngày           
+            if (sdf.parse(hd.getNgayTao()).before(l) && sdf.parse(hd.getNgayTao()).after(f)) {
+                if (search.isBlank()) {
+                    listSearch.add(hd);
+                } else {
+                    CbxIndex(key, hd, search);
+                }
+            }
+        }
+        return listSearch;
+    }
+
+    public List<HoaDon> CbxIndex(int key, HoaDon hd, String search) {
+
+        switch (key) {
+            case 0 -> {
+                if (hd.getMaHD().contains(search)) {
+                    listSearch.add(hd);
+                }
+            }
+            case 1 -> {
+                if (hd.getTenNV().contains(search)) {
+                    listSearch.add(hd);
+                }
+            }
+//                        case 2 -> {
+//                            if (hd.getId().contains(search)) {
+//                                listSearch.add(hd);
+//                            }
+//                        }
+            case 3 -> {
+                if (hd.getTinhTrang().contains(search)) {
+                    listSearch.add(hd);
+                }
+            }
+            default -> {
+            }
+        }
+        return listSearch;
+    }
+
+    public void createVoucher(String id, String tieuDe, Double giaTri,String dieuKien, String loai, Date s, Date e) {
+        try (Connection conn = openConnection(); PreparedStatement ps = conn.prepareStatement("SP_AddVoucher ?,?,?,?,?,?,?")) {
+            ps.setString(1, id);
+            ps.setString(2, tieuDe);
+            ps.setDouble(3, giaTri);
+            ps.setString(4, dieuKien);
+            ps.setString(5, loai);
+            ps.setString(6, sdf.format(s));
+            ps.setString(7, sdf.format(e));
+            ps.executeUpdate();
+        } catch (Exception ex) {
+        }
+        getDataVoucher();
+    }
+
+    public List<Voucher> getDataVoucher() {
+        listVoucher.clear();
+        try (Connection conn = openConnection(); Statement sta = conn.createStatement()) {
+            ResultSet rs = sta.executeQuery("Select * from Voucher");
+            while(rs.next()){
+               listVoucher.add(new Voucher(rs.getInt("id"),rs.getString("ma_voucher"), rs.getString("tieu_de"), rs.getString("loai_giam_gia"), rs.getString("dieu_kien"),rs.getString("ngay_bat_dau"), rs.getString("ngay_ket_thuc"), rs.getDouble("gia_tri")));
+            }
+        } catch (Exception ex) {
+        }
+        return listVoucher;
+    }
 }
